@@ -8,6 +8,7 @@
 
 namespace CTRL::Object
 {
+	// e.g. bHasBPDoesSupportWorldType = CTRL::Object::IsImplementedInBlueprint(this, GET_FUNCTION_NAME_CHECKED(ThisClass, K2_DoesSupportWorldType));
 	static bool IsImplementedInBlueprint(UObject const* Object, FName const FuncName)
 	{
 		if (!ensure(Object)) return false;

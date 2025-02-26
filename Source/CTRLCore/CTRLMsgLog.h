@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 
+#include "Engine/DeveloperSettings.h"
+
 #include "Kismet/BlueprintFunctionLibrary.h"
 
 #include "Logging/TokenizedMessage.h"
@@ -11,15 +13,6 @@
 #include "CTRLMsgLog.generated.h"
 
 class FTextToken;
-
-USTRUCT(BlueprintType)
-struct FCTRLMsgLogSettings
-{
-	GENERATED_BODY()
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FName DefaultLogName = "CTRL.Core";
-};
 
 UENUM()
 enum class ECTRLMessageSeverity : uint8
@@ -34,6 +27,25 @@ enum class ECTRLMessageSeverity : uint8
 /**
  * 
  */
+UCLASS(DefaultConfig, Config="Editor", meta=(DisplayName="CTRL.MsgLog"))
+class CTRLCORE_API UCTRLMsgLogSettings : public UDeveloperSettings
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FName DefaultLogName = "CTRL.Core";
+
+#if WITH_EDITORONLY_DATA
+	virtual FName GetContainerName() const override { return TEXT("Editor"); }
+	virtual FName GetCategoryName() const override { return TEXT("CTRL"); }
+	virtual FText GetSectionText() const override { return FText::FromString(TEXT("Message Log")); }
+#endif
+};
+
+/**
+ * 
+ */
 UCLASS()
 class CTRLCORE_API UCTRLMsgLog : public UBlueprintFunctionLibrary
 {
@@ -43,14 +55,20 @@ public:
 	// Log message to the MessageLog + object token, based on a condition.
 	// Returns true if the condition is met.
 	UFUNCTION(BlueprintCallable, meta = (WorldContext = "Subject", DefaultToSelf = "Subject"))
-	static bool EnsureLog(bool bCondition, UObject const* Subject, FString const& Message = "", ECTRLMessageSeverity Severity = ECTRLMessageSeverity::Warning);
-	
+	static bool EnsureLog(bool bCondition, UObject const* Subject, FString const& Message = "", ECTRLMessageSeverity Severity = ECTRLMessageSeverity::Warning, bool bOpenMsgLog = true);
+
 	// Log a message in the MessageLog at specified severity.
-	static void Log(FString const& Message, ECTRLMessageSeverity Severity = ECTRLMessageSeverity::Warning);
+	static void Log(FString const& Message, ECTRLMessageSeverity Severity = ECTRLMessageSeverity::Warning, bool bOpenMsgLog = true);
 
 	// Log a message in the MessageLog with a reference to the passed-in object at specified severity.
 	UFUNCTION(BlueprintCallable, meta = (WorldContext = "Subject", DefaultToSelf = "Subject"))
-	static void Log(UObject const* Subject, FString const& Message, ECTRLMessageSeverity Severity = ECTRLMessageSeverity::Warning);
+	static void Log(UObject const* Subject, FString const& Message, ECTRLMessageSeverity Severity = ECTRLMessageSeverity::Warning, bool bOpenMsgLog = true);
+
+	// add message to log or console log
+	static void AddMessage(TSharedRef<FTokenizedMessage> const& Msg, bool bOpenMsgLog = true);
+
+	// Print a message to the output log
+	FORCEINLINE static void OutputLog(TSharedRef<FTokenizedMessage> const& Msg, ECTRLMessageSeverity Severity = ECTRLMessageSeverity::Warning);
 
 	// Simplified arguments for Actor token creation.
 	static TSharedRef<IMessageToken> ActorToken(AActor const* Actor, FString const& InMessage = "");
@@ -73,9 +91,6 @@ public:
 	// Get short path to object for logging.
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	static FString GetShortPath(UObject const* Object);
-
-	// Print the message to the output log.
-	FORCEINLINE static void OutputLog(TSharedRef<FTokenizedMessage> const& Msg, ECTRLMessageSeverity Severity);
 
 	// Convert CTRL Severity to Engine MsgLog Severity.
 	static EMessageSeverity::Type GetSeverity(ECTRLMessageSeverity Severity);

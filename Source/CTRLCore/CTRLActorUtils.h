@@ -37,7 +37,7 @@ class CTRLCORE_API UCTRLActorUtils : public UBlueprintFunctionLibrary
 	static UActorComponent* GetValidComponentByClass(
 		AActor* Actor,
 		TSubclassOf<UActorComponent> const ComponentClass,
-		UPARAM(meta = ()) bool& IsComponentValid
+		bool& IsComponentValid
 	);
 
 	/**
@@ -86,7 +86,12 @@ class CTRLCORE_API UCTRLActorUtils : public UBlueprintFunctionLibrary
 	 * will return the first player controller in the world, which may not be the
 	 * one you want.
 	 */
-	UFUNCTION(BlueprintCallable, BlueprintPure, meta = (CompactNodeTitle = "LocalPlayerController", WorldContext = "WorldContextObject", DefaultToSelf = "WorldContextObject"), Category = "Local Player")
+	UFUNCTION(
+		BlueprintCallable,
+		BlueprintPure,
+		meta = (CompactNodeTitle = "LocalPlayerController", WorldContext = "WorldContextObject", DefaultToSelf = "WorldContextObject"),
+		Category = "Local Player"
+	)
 	static APlayerController* GetLocalPlayerController(UObject const* WorldContextObject);
 
 	template <typename T = APawn>

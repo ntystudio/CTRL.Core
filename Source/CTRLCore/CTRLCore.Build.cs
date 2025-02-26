@@ -6,14 +6,13 @@ public class CTRLCore : ModuleRules
 {
 	public CTRLCore(ReadOnlyTargetRules Target) : base(Target)
 	{
-		
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 		IWYUSupport = IWYUSupport.Full;
 
 		PublicDependencyModuleNames.AddRange([
 			"Core",
-			"Engine",
 			"DeveloperSettings",
+			"Engine",
 		]);
 
 
@@ -24,10 +23,10 @@ public class CTRLCore : ModuleRules
 			"Slate",
 			"SlateCore"
 		]);
-		
+
 		if (Target.bBuildEditor)
 		{
-			// Needed for loading BP subsystems before PIE
+			// Needed for UCTRLWorldSubsystemBlueprintLoader loading BP subsystems before PIE
 			PrivateDependencyModuleNames.Add("EditorFramework");
 			PrivateDependencyModuleNames.Add("UnrealEd");
 		}

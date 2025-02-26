@@ -6,11 +6,4 @@
 
 DECLARE_LOG_CATEGORY_EXTERN(LogCTRLCore, Log, All);
 
-class FCTRLCoreModule : public IModuleInterface
-{
-	using ThisClass = FCTRLCoreModule;
-public:
-	/** IModuleInterface implementation */
-	virtual void StartupModule() override;
-	virtual void ShutdownModule() override;
-};
+class FCTRLCoreModule : public IModuleInterface {};

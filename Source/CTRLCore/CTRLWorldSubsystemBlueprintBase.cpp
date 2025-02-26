@@ -108,7 +108,7 @@ void UCTRLWorldSubsystemBlueprintLoader::Initialize(FSubsystemCollectionBase& Co
 
 void UCTRLWorldSubsystemBlueprintLoader::Deinitialize()
 {
-	if (LoadingHandle.IsValid() && LoadingHandle->IsActive())
+	if (LoadingHandle.IsValid())
 	{
 		LoadingHandle->CancelHandle();
 	}
