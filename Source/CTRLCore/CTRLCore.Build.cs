@@ -1,4 +1,5 @@
-﻿// Some copyright should be here...
+﻿// SPDX-FileCopyrightText: © 2025 NTY.studio
+// SPDX-License-Identifier: MIT
 
 using UnrealBuildTool;
 

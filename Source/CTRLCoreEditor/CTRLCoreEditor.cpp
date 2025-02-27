@@ -1,8 +1,9 @@
-﻿#include "CTRLCoreEditor.h"
+﻿// SPDX-FileCopyrightText: © 2025 NTY.studio
+// SPDX-License-Identifier: MIT
+
+#include "CTRLCoreEditor.h"
 
 #include "CTRLCoreEditor/CTRLThumbnailRenderer.h"
-
-#include "Misc/CoreDelegates.h"
 
 #define LOCTEXT_NAMESPACE "FCTRLCoreEditorModule"
 

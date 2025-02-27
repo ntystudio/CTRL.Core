@@ -1,6 +1,7 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+﻿// SPDX-FileCopyrightText: © 2025 NTY.studio
+// SPDX-License-Identifier: MIT
 
-#include "CTRLCoreEditor/CTRLThumbnailRenderer.h"
+#include "CTRLThumbnailRenderer.h"
 
 #include "ContentBrowserDataSubsystem.h"
 
@@ -11,6 +12,8 @@
 #include "ThumbnailRendering/ThumbnailManager.h"
 
 #include "UObject/UObjectIterator.h"
+
+#include UE_INLINE_GENERATED_CPP_BY_NAME(CTRLThumbnailRenderer)
 
 //~ ──────────────────────────── UCTRLThumbnailSubsystem ───────────────────────────── ~//
 

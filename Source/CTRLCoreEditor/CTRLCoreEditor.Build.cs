@@ -1,4 +1,7 @@
-﻿using UnrealBuildTool;
+﻿// SPDX-FileCopyrightText: © 2025 NTY.studio
+// SPDX-License-Identifier: MIT
+
+using UnrealBuildTool;
 
 public class CTRLCoreEditor : ModuleRules
 {

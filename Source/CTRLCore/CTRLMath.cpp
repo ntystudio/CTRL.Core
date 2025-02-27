@@ -1,10 +1,13 @@
-﻿// SPDX-FileCopyrightText: 2025 NTY.studio
+﻿// SPDX-FileCopyrightText: © 2025 NTY.studio
+// SPDX-License-Identifier: MIT
 
-#include "CTRLCore/CTRLMath.h"
+#include "CTRLMath.h"
 
 #include "Algo/Accumulate.h"
 
 #include "Kismet/KismetMathLibrary.h"
+
+#include UE_INLINE_GENERATED_CPP_BY_NAME(CTRLMath)
 
 FVector UCTRLMath::RoundV(FVector const& Vector)
 {

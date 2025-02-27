@@ -1,4 +1,7 @@
-﻿#pragma once
+﻿// SPDX-FileCopyrightText: © 2025 NTY.studio
+// SPDX-License-Identifier: MIT
+
+#pragma once
 
 #include "CoreMinimal.h"
 

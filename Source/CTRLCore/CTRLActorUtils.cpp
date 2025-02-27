@@ -1,7 +1,7 @@
-﻿// Copyright Epic Games, Inc. All Rights Reserved.
+﻿// SPDX-FileCopyrightText: © 2025 NTY.studio
+// SPDX-License-Identifier: MIT
 
 #include "CTRLActorUtils.h"
-// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "AIController.h"
 
@@ -12,6 +12,8 @@
 #include "GameFramework/Controller.h"
 #include "GameFramework/Pawn.h"
 #include "GameFramework/PlayerController.h"
+
+#include UE_INLINE_GENERATED_CPP_BY_NAME(CTRLActorUtils)
 
 UActorComponent* UCTRLActorUtils::GetValidComponentByClass(AActor* Actor, TSubclassOf<UActorComponent> const ComponentClass, bool& IsComponentValid)
 {

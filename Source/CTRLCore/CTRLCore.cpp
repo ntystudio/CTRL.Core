@@ -1,4 +1,7 @@
-﻿#include "CTRLCore.h"
+﻿// SPDX-FileCopyrightText: © 2025 NTY.studio
+// SPDX-License-Identifier: MIT
+
+#include "CTRLCore.h"
 
 #define LOCTEXT_NAMESPACE "FCTRLCoreModule"
 
