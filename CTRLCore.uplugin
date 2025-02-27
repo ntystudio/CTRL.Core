@@ -18,6 +18,11 @@
 			"Name": "CTRLCore",
 			"Type": "Runtime",
 			"LoadingPhase": "Default"
+		},
+		{
+			"Name": "CTRLCoreEditor",
+			"Type": "Editor",
+			"LoadingPhase": "Default"
 		}
 	]
 }
