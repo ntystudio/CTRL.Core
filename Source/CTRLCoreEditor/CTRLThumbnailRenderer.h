@@ -7,18 +7,14 @@
 #include "Editor.h"
 #include "EditorSubsystem.h"
 
-#include "Engine/DeveloperSettings.h"
-
 #include "ThumbnailRendering/StaticMeshThumbnailRenderer.h"
-
-#include "UObject/Interface.h"
 
 #include "CTRLThumbnailRenderer.generated.h"
 
 class UStaticMesh;
 
 /**
- * 
+ * Takes an object that implements ICTRLStaticMeshThumbnailProvider, and uses GetThumbnailMesh() to render a static mesh thumbnail.
  */
 UCLASS()
 class CTRLCOREEDITOR_API UCTRLStaticMeshThumbnailProviderRenderer : public UStaticMeshThumbnailRenderer
@@ -32,8 +28,8 @@ public:
 };
 
 /**
- * This ensures any BP-subclasses of UCTRLWorldSubsystemBlueprintBase are loaded at editor/game startup and before entering PIE.
- * Make sure to configure an entry for CTRLWorldSubsystemBlueprintBase in "Project Settings" → "Asset Manager" → "Primary Asset Types to Scan"
+ * Handles registering thumbnail visualizers for ICTRLStaticMeshThumbnailProvider types.
+ * @see https://zomgmoz.tv/unreal/Editor-customization/Custom-asset-editor-thumbnails
  */
 UCLASS(NotBlueprintType)
 class CTRLCOREEDITOR_API UCTRLThumbnailSubsystem : public UEditorSubsystem
@@ -42,16 +38,12 @@ class CTRLCOREEDITOR_API UCTRLThumbnailSubsystem : public UEditorSubsystem
 
 public:
 	static ThisClass* Get();
-	void RegisterThumbnailRenderersInternal();
 	void RegisterThumbnailRenderers();
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	virtual void Deinitialize() override;
 
-	UPROPERTY(Transient)
-	TSet<TObjectPtr<UClass>> RegisteredAssetTypes;
-	FTimerHandle QueuedUpdateHandle;
-
 protected:
+	void RegisterThumbnailRenderersInternal();
 	void OnAssetsAdded(TArrayView<FAssetData const> AssetDatas);
 	void OnInitialScanComplete();
 	void OnItemDataUpdated(TArrayView<FContentBrowserItemDataUpdate const> ContentBrowserItemDataUpdates);
