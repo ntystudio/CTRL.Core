@@ -10,20 +10,22 @@ public class CTRLCore : ModuleRules
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 		IWYUSupport = IWYUSupport.Full;
 
-		PublicDependencyModuleNames.AddRange([
+		PublicDependencyModuleNames.AddRange(new[]
+		{
 			"Core",
 			"DeveloperSettings",
 			"Engine",
-		]);
+		});
 
 
-		PrivateDependencyModuleNames.AddRange([
+		PrivateDependencyModuleNames.AddRange(new[]
+		{
 			"AIModule",
 			"CoreUObject",
 			"Engine",
 			"Slate",
 			"SlateCore"
-		]);
+		});
 
 		if (Target.bBuildEditor)
 		{
