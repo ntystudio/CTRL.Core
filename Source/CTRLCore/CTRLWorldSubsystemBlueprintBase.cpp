@@ -77,62 +77,8 @@ bool UCTRLWorldSubsystemBlueprintBase::DoesSupportWorldType(EWorldType::Type con
 	return K2_DoesSupportWorldType(static_cast<ECTRLWorldType>(WorldType));
 }
 
-void UCTRLWorldSubsystemBlueprintLoader::PreBeginPIE(bool bIsSimulating)
-{
-	LoadAssets();
-}
-
-void UCTRLWorldSubsystemBlueprintLoader::OnInitialScanComplete()
-{
-	LoadAssets();
-}
-
-void UCTRLWorldSubsystemBlueprintLoader::PostEngineInit()
-{
-	UAssetManager& AssetManager = UAssetManager::Get();
-	AssetManager.CallOrRegister_OnCompletedInitialScan(FSimpleMulticastDelegate::FDelegate::CreateUObject(this, &ThisClass::OnInitialScanComplete));
-}
-
 void UCTRLWorldSubsystemBlueprintLoader::Initialize(FSubsystemCollectionBase& Collection)
 {
+	AssetTypes.Add(UCTRLWorldSubsystemBlueprintBase::StaticClass()->GetFName());
 	Super::Initialize(Collection);
-
-	// This should always happen before PostEngineInit
-	FCoreDelegates::OnPostEngineInit.AddUObject(this, &ThisClass::PostEngineInit);
-
-#if WITH_EDITOR
-	if (GIsEditor)
-	{
-		// ensure subclasses get loaded before PIE
-		FEditorDelegates::PreBeginPIE.AddUObject(this, &ThisClass::PreBeginPIE);
-	}
-#endif
-}
-
-void UCTRLWorldSubsystemBlueprintLoader::Deinitialize()
-{
-	if (LoadingHandle.IsValid())
-	{
-		LoadingHandle->CancelHandle();
-	}
-	LoadingHandle.Reset();
-	Super::Deinitialize();
-}
-
-void UCTRLWorldSubsystemBlueprintLoader::LoadAssets()
-{
-	static FPrimaryAssetType const AssetType = UCTRLWorldSubsystemBlueprintBase::StaticClass()->GetFName();
-	auto const OldLoadingHandle = LoadingHandle;
-	ON_SCOPE_EXIT
-	{
-		// clear old handle at end to prevent cancel then re-add
-		if (OldLoadingHandle.IsValid())
-		{
-			OldLoadingHandle->CancelHandle();
-		}
-	};
-
-	LoadingHandle = UAssetManager::Get().LoadPrimaryAssetsWithType(AssetType);
-	if (!LoadingHandle.IsValid()) return; // e.g. all already loaded
-	LoadingHandle->WaitUntilComplete();
 }

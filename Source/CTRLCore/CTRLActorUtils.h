@@ -29,11 +29,11 @@ class CTRLCORE_API UCTRLActorUtils : public UBlueprintFunctionLibrary
 
 	UFUNCTION(
 		BlueprintCallable,
+		DisplayName = "Get Valid Component By Class [CTRL]",
 		meta = (
 			ComponentClass = "/Script/Engine.ActorComponent",
 			DeterminesOutputType = "ComponentClass",
 			ExpandBoolAsExecs = "IsComponentValid",
-			WorldContext = "Actor",
 			DefaultToSelf = "Actor"
 		)
 	)
@@ -48,13 +48,13 @@ class CTRLCORE_API UCTRLActorUtils : public UBlueprintFunctionLibrary
 	 * Useful in event graphs where you want to check whether a player triggered the
 	 * event and you don't want to think about whether the actor is a pawn or a controller.
 	 */
-	UFUNCTION(BlueprintCallable, BlueprintPure, DisplayName = "Is Player Actor", meta = (CompactNodeTitle = "IsPlayerActor", WorldContext = "Actor", DefaultToSelf = "Actor"))
+	UFUNCTION(BlueprintCallable, BlueprintPure, DisplayName = "Is Player Actor [CTRL]", meta = (WorldContext = "Actor", DefaultToSelf = "Actor"))
 	static bool IsPlayer(AActor const* Actor);
 
 	UFUNCTION(
 		BlueprintCallable,
-		DisplayName = "Get Owner Actor",
-		meta = (CompactNodeTitle = "GetOwnerActor", WorldContext = "Target", DefaultToSelf = "Target", DeterminesOutputType = "OwnerClass", ExpandEnumAsExecs = "OutIsValid")
+		DisplayName = "Get Owner Actor [CTRL]",
+		meta = (WorldContext = "Target", DefaultToSelf = "Target", DeterminesOutputType = "OwnerClass", ExpandEnumAsExecs = "OutIsValid")
 	)
 	static AActor* GetOwnerActor(UObject* Target, TSubclassOf<AActor> OwnerClass, ECTRLIsValid& OutIsValid);
 
@@ -66,8 +66,8 @@ class CTRLCORE_API UCTRLActorUtils : public UBlueprintFunctionLibrary
 
 	UFUNCTION(
 		BlueprintCallable,
-		DisplayName = "Find Pawn",
-		meta = (CompactNodeTitle = "FindPawn", WorldContext = "Target", DefaultToSelf = "Target", DeterminesOutputType = "PawnClass", ExpandEnumAsExecs = "OutIsValid")
+		DisplayName = "Find Pawn [CTRL]",
+		meta = (DefaultToSelf = "Target", DeterminesOutputType = "PawnClass", ExpandEnumAsExecs = "OutIsValid")
 	)
 	static APawn* FindPawn_K2(ECTRLIsValid& OutIsValid, UObject const* Target, TSubclassOf<APawn> PawnClass = nullptr);
 
@@ -78,8 +78,8 @@ class CTRLCORE_API UCTRLActorUtils : public UBlueprintFunctionLibrary
 	 */
 	UFUNCTION(
 		BlueprintCallable,
-		DisplayName = "Find Controller",
-		meta = (WorldContext = "Target", DefaultToSelf = "Target", CompactNodeTitle = "FindController", DeterminesOutputType = "ControllerClass", ExpandEnumAsExecs = "OutIsValid")
+		DisplayName = "Find Controller [CTRL]",
+		meta = (DefaultToSelf = "Target", DeterminesOutputType = "ControllerClass", ExpandEnumAsExecs = "OutIsValid", HideSelfPin=false)
 	)
 	static AController* FindController_K2(ECTRLIsValid& OutIsValid, UObject const* Target, TSubclassOf<AController> ControllerClass = nullptr);
 
@@ -92,7 +92,8 @@ class CTRLCORE_API UCTRLActorUtils : public UBlueprintFunctionLibrary
 	UFUNCTION(
 		BlueprintCallable,
 		BlueprintPure,
-		meta = (CompactNodeTitle = "LocalPlayerController", WorldContext = "WorldContextObject", DefaultToSelf = "WorldContextObject"),
+		DisplayName = "Get Local Player Controller [CTRL]",
+		meta = (WorldContext = "WorldContextObject", DefaultToSelf = "WorldContextObject"),
 		Category = "Local Player"
 	)
 	static APlayerController* GetLocalPlayerController(UObject const* WorldContextObject);
@@ -106,9 +107,9 @@ class CTRLCORE_API UCTRLActorUtils : public UBlueprintFunctionLibrary
 	UFUNCTION(
 		BlueprintCallable,
 		BlueprintPure,
-		DisplayName = "Get Local Player Pawn",
+		DisplayName = "Get Local Player Pawn [CTRL]",
 		Category = "Local Player",
-		meta = (CompactNodeTitle = "LocalPlayerPawn", WorldContext = "WorldContextObject", DefaultToSelf = "WorldContextObject")
+		meta = (WorldContext = "WorldContextObject", DefaultToSelf = "WorldContextObject")
 	)
 	static APawn* GetLocalPlayerPawn_K2(UObject const* WorldContextObject);
 };

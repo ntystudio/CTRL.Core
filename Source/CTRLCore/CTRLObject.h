@@ -19,10 +19,13 @@ namespace CTRL::Object
 {
 	// e.g. bHasBPDoesSupportWorldType = CTRL::Object::IsImplementedInBlueprint(this, GET_FUNCTION_NAME_CHECKED(ThisClass, K2_DoesSupportWorldType));
 	bool IsImplementedInBlueprint(UObject const* Object, FName const FuncName);
+	TArray<UClass*> GetSubclassesOf(TSubclassOf<UObject> const& Class);
 }
 
 UCLASS()
 class UCTRLObject : public UBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
+	UFUNCTION(BlueprintCallable, BlueprintPure, DisplayName="Get Subclasses Of [CTRL]")
+	static TArray<UClass*> GetSubclassesOf(TSubclassOf<UObject> Class);
 };

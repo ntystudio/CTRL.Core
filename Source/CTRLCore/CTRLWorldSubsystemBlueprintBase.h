@@ -6,6 +6,8 @@
 #include "CoreMinimal.h"
 #include "Editor.h"
 
+#include "CTRLCore/CTRLPrimaryAssetLoadingSubsystem.h"
+
 #include "Engine/AssetManager.h"
 #include "Engine/BlueprintGeneratedClass.h"
 #include "Engine/World.h"
@@ -144,20 +146,10 @@ protected:
  * Make sure to configure an entry for CTRLWorldSubsystemBlueprintBase in "Project Settings" → "Asset Manager" → "Primary Asset Types to Scan"
  */
 UCLASS(NotBlueprintType)
-class CTRLCORE_API UCTRLWorldSubsystemBlueprintLoader : public UEngineSubsystem
+class CTRLCORE_API UCTRLWorldSubsystemBlueprintLoader : public UCTRLPrimaryAssetLoadingSubsystem
 {
 	GENERATED_BODY()
 
 public:
-	void LoadAssets();
-
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
-	virtual void Deinitialize() override;
-
-protected:
-	TSharedPtr<FStreamableHandle> LoadingHandle;
-
-	void OnInitialScanComplete();
-	void PostEngineInit();
-	void PreBeginPIE(bool bIsSimulating);
 };

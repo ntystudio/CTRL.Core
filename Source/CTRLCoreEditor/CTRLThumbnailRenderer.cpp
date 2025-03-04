@@ -7,7 +7,7 @@
 
 #include "CTRLCore/CTRLAssetThumbnails.h"
 
-#include "Engine/StaticMesh.h"
+#include "Engine/Texture2D.h"
 
 #include "ThumbnailRendering/ThumbnailManager.h"
 
@@ -51,6 +51,10 @@ void UCTRLThumbnailSubsystem::RegisterThumbnailRenderersInternal()
 		{
 			Classes.Add(*ClassIt);
 		}
+		if (ClassIt->ImplementsInterface(UCTRLTextureThumbnailProvider::StaticClass()))
+		{
+			Classes.Add(*ClassIt);
+		}
 	}
 
 	// Register Thumbnail Renderers
@@ -59,7 +63,7 @@ void UCTRLThumbnailSubsystem::RegisterThumbnailRenderersInternal()
 	{
 		if (!AssetType) continue;
 		ThumbnailManager.UnregisterCustomRenderer(AssetType); // Don't bother tracking what we've already registered, just reregister everything
-		ThumbnailManager.RegisterCustomRenderer(AssetType, UCTRLStaticMeshThumbnailProviderRenderer::StaticClass());
+		ThumbnailManager.RegisterCustomRenderer(AssetType, UCTRLThumbnailProviderRenderer::StaticClass());
 	}
 }
 
@@ -91,7 +95,7 @@ void UCTRLThumbnailSubsystem::OnItemDataUpdated(TArrayView<FContentBrowserItemDa
 	RegisterThumbnailRenderers();
 }
 
-//~ ────────────────────── StaticMeshThumbnailProviderRenderer ─────────────────────── ~//
+//~ ────────────────────── StaticThumbnailProviderRenderer ─────────────────────── ~//
 
 bool UCTRLStaticMeshThumbnailProviderRenderer::CanVisualizeAsset(UObject* Object)
 {
@@ -113,11 +117,96 @@ void UCTRLStaticMeshThumbnailProviderRenderer::Draw(
 	bool const bAdditionalViewFamily
 )
 {
-	if (auto const* Stage = Cast<ICTRLStaticMeshThumbnailProvider>(Object))
+	if (auto const* AsThumbnailProvider = Cast<ICTRLStaticMeshThumbnailProvider>(Object))
 	{
-		if (auto const ThumbnailMesh = Stage->GetThumbnailMesh())
+		if (auto const ThumbnailAsset = AsThumbnailProvider->GetThumbnailMesh())
 		{
-			Super::Draw(ThumbnailMesh, X, Y, Width, Height, Target, Canvas, bAdditionalViewFamily);
+			Super::Draw(ThumbnailAsset, X, Y, Width, Height, Target, Canvas, bAdditionalViewFamily);
 		}
 	}
+}
+
+//~ ────────────────────── TextureThumbnailProviderRenderer ─────────────────────── ~//
+
+bool UCTRLTextureThumbnailProviderRenderer::CanVisualizeAsset(UObject* Object)
+{
+	if (auto const AsThumbnailProvider = Cast<ICTRLTextureThumbnailProvider>(Object))
+	{
+		return IsValid(AsThumbnailProvider->GetThumbnailTexture());
+	}
+	return false;
+}
+
+void UCTRLTextureThumbnailProviderRenderer::Draw(
+	UObject* Object,
+	int32 const X,
+	int32 const Y,
+	uint32 const Width,
+	uint32 const Height,
+	FRenderTarget* Target,
+	FCanvas* Canvas,
+	bool const bAdditionalViewFamily
+)
+{
+	if (auto const* AsThumbnailProvider = Cast<ICTRLTextureThumbnailProvider>(Object))
+	{
+		if (auto const ThumbnailAsset = AsThumbnailProvider->GetThumbnailTexture())
+		{
+			Super::Draw(ThumbnailAsset, X, Y, Width, Height, Target, Canvas, bAdditionalViewFamily);
+		}
+	}
+}
+
+//~ ────────────────────── ThumbnailProviderRenderer ─────────────────────── ~//
+
+UThumbnailRenderer* UCTRLThumbnailProviderRenderer::GetThumbnailRenderer(UObject* Object) const
+{
+	if (StaticMeshRenderer->CanVisualizeAsset(Object))
+	{
+		return StaticMeshRenderer;
+	}
+	if (TextureRenderer->CanVisualizeAsset(Object))
+	{
+		return TextureRenderer;
+	}
+
+	return nullptr;
+}
+
+void UCTRLThumbnailProviderRenderer::GetThumbnailSize(UObject* Object, float Zoom, uint32& OutWidth, uint32& OutHeight) const
+{
+	if (auto const Renderer = GetThumbnailRenderer(Object))
+	{
+		Renderer->GetThumbnailSize(Object, Zoom, OutWidth, OutHeight);
+		return;
+	}
+	Super::GetThumbnailSize(Object, Zoom, OutWidth, OutHeight);
+}
+
+bool UCTRLThumbnailProviderRenderer::CanVisualizeAsset(UObject* Object)
+{
+	if (auto const Renderer = GetThumbnailRenderer(Object))
+	{
+		return Renderer->CanVisualizeAsset(Object);
+	}
+	return false;
+}
+
+void UCTRLThumbnailProviderRenderer::Draw(
+	UObject* Object,
+	int32 const X,
+	int32 const Y,
+	uint32 const Width,
+	uint32 const Height,
+	FRenderTarget* Target,
+	FCanvas* Canvas,
+	bool const bAdditionalViewFamily
+)
+{
+	if (auto const Renderer = GetThumbnailRenderer(Object))
+	{
+		Renderer->Draw(Object, X, Y, Width, Height, Target, Canvas, bAdditionalViewFamily);
+		return;
+	}
+	Super::Draw(Object, X, Y, Width, Height, Target, Canvas, bAdditionalViewFamily);
 }
