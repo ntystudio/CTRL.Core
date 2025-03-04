@@ -24,7 +24,7 @@ public class CTRLCore : ModuleRules
 			"CoreUObject",
 			"Engine",
 			"Slate",
-			"SlateCore", "AkAudio"
+			"SlateCore",
 		});
 
 		if (Target.bBuildEditor)
