@@ -25,6 +25,7 @@ public class CTRLCore : ModuleRules
 			"Engine",
 			"Slate",
 			"SlateCore",
+			"UMG",
 		});
 
 		if (Target.bBuildEditor)

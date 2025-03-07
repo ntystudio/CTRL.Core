@@ -14,7 +14,7 @@ struct FStreamableHandle;
  * This ensures any BP-subclasses of passed-in classes are loaded at editor/game startup and before entering PIE.
  * Make sure to configure an entry for the entries in "Project Settings" → "Asset Manager" → "Primary Asset Types to Scan"
  */
-UCLASS(NotBlueprintType)
+UCLASS(NotBlueprintType, Category="CTRL|AssetManager", DisplayName = "Primary Asset Loading Subsystem [CTRL]")
 class CTRLCORE_API UCTRLPrimaryAssetLoadingSubsystem : public UEngineSubsystem
 {
 	GENERATED_BODY()

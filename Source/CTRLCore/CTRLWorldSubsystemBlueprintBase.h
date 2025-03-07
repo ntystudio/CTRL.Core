@@ -12,7 +12,6 @@
 #include "Engine/BlueprintGeneratedClass.h"
 #include "Engine/World.h"
 
-#include "Subsystems/EngineSubsystem.h"
 #include "Subsystems/WorldSubsystem.h"
 
 #include "CTRLWorldSubsystemBlueprintBase.generated.h"
@@ -21,7 +20,7 @@
  * Specifies the goal/source of a UWorld object
  * Blueprint-visible version of EWorldType
  */
-UENUM(BlueprintType)
+UENUM(BlueprintType, Category="CTRL|World")
 enum class ECTRLWorldType : uint8
 {
 	/** An untyped world, in most cases this will be the vestigial worlds of streamed in sublevels */
@@ -58,7 +57,7 @@ enum class ECTRLWorldType : uint8
  * Remember to return any other UWorldSubsystem dependencies in an InitializeDependencies override,
  * this ensures these subsystems are initialized before this subsystem.
  */
-UCLASS(BlueprintType, Blueprintable, Abstract, DisplayName = "World Subsystem Blueprint Base [CTRL]")
+UCLASS(BlueprintType, Blueprintable, Abstract, Category="CTRL|World", DisplayName = "World Subsystem Blueprint Base [CTRL]")
 class CTRLCORE_API UCTRLWorldSubsystemBlueprintBase : public UWorldSubsystem
 {
 	GENERATED_BODY()

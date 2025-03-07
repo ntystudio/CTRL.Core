@@ -43,7 +43,7 @@ bool UCTRLActorUtils::IsPlayer(AActor const* Actor)
 	return false;
 }
 
-AActor* UCTRLActorUtils::GetOwnerActor(UObject* Target, TSubclassOf<AActor> OwnerClass, ECTRLIsValid& OutIsValid)
+AActor* UCTRLActorUtils::K2_GetOwnerActor(UObject* Target, TSubclassOf<AActor> OwnerClass, ECTRLIsValid& OutIsValid)
 {
 	OutIsValid = ECTRLIsValid::IsInvalid;
 	if (!IsValid(Target)) { return nullptr; }
@@ -89,11 +89,37 @@ AActor* UCTRLActorUtils::GetOwnerActor(UObject* Target, TSubclassOf<AActor> Owne
 }
 
 template <typename T>
+T* UCTRLActorUtils::GetOwnerActor(UObject* Target)
+{
+	if (!IsValid(Target)) { return nullptr; }
+
+
+	if (auto const Component = Cast<UActorComponent>(Target))
+	{
+		if (auto const Owner = Component->GetOwner<T>())
+		{
+			return Owner;
+		}
+		return nullptr;
+	}
+	if (auto const Actor = Cast<AActor>(Target))
+	{
+		if (auto const Owner = Actor->GetOwner<T>())
+		{
+			return Owner;
+		}
+		return nullptr;
+	}
+
+	return Target->GetTypedOuter<T>();
+}
+
+template <typename T>
 T* UCTRLActorUtils::FindPawn(UObject const* Target, bool const bWalkOuter)
 {
 	if (auto const* Pawn = Cast<T>(Target))
 	{
-		return const_cast<APawn*>(Pawn);
+		return const_cast<T*>(Pawn);
 	}
 
 	if (auto const Controller = FindController(Target, bWalkOuter))
@@ -105,7 +131,7 @@ T* UCTRLActorUtils::FindPawn(UObject const* Target, bool const bWalkOuter)
 	return Target->GetTypedOuter<T>();
 }
 
-APawn* UCTRLActorUtils::FindPawn_K2(ECTRLIsValid& OutIsValid, UObject const* Target, TSubclassOf<APawn> PawnClass)
+APawn* UCTRLActorUtils::K2_FindPawn(ECTRLIsValid& OutIsValid, UObject const* Target, TSubclassOf<APawn> PawnClass)
 {
 	OutIsValid = ECTRLIsValid::IsInvalid;
 	if (PawnClass == nullptr)
@@ -165,7 +191,7 @@ T* UCTRLActorUtils::FindController(UObject const* Target, bool const bWalkOuter)
 template AAIController* UCTRLActorUtils::FindController<AAIController>(UObject const* Target, bool bWalkOuter);
 template APlayerController* UCTRLActorUtils::FindController<APlayerController>(UObject const* Target, bool bWalkOuter);
 
-AController* UCTRLActorUtils::FindController_K2(ECTRLIsValid& OutIsValid, UObject const* Target, TSubclassOf<AController> ControllerClass)
+AController* UCTRLActorUtils::K2_FindController(ECTRLIsValid& OutIsValid, UObject const* Target, TSubclassOf<AController> ControllerClass)
 {
 	OutIsValid = ECTRLIsValid::IsInvalid;
 
@@ -195,10 +221,39 @@ APlayerController* UCTRLActorUtils::GetLocalPlayerController(UObject const* Worl
 	return GEngine->GetFirstLocalPlayerController(World);
 }
 
-APawn* UCTRLActorUtils::GetLocalPlayerPawn_K2(UObject const* WorldContextObject)
+APawn* UCTRLActorUtils::K2_GetLocalPlayerPawn(UObject const* WorldContextObject)
 {
 	return GetLocalPlayerPawn<APawn>(WorldContextObject);
 }
+
+APlayerCameraManager* UCTRLActorUtils::K2_GetPlayerCameraManager(AActor* Actor, TSubclassOf<APlayerCameraManager> const CameraManagerClass, bool& IsValid)
+{
+	IsValid = false;
+	if (auto const CameraManager = GetPlayerCameraManager<APlayerCameraManager>(Actor))
+	{
+		if (CameraManager->IsA(CameraManagerClass))
+		{
+			IsValid = true;
+			return CameraManager;
+		}
+	}
+	return nullptr;
+}
+
+template <typename T>
+APlayerCameraManager* UCTRLActorUtils::GetPlayerCameraManager(AActor* Actor)
+{
+	if (auto const PC = FindController<APlayerController>(Actor))
+	{
+		if (auto CameraManager = Cast<T>(PC->PlayerCameraManager))
+		{
+			return CameraManager;
+		}
+	}
+	return nullptr;
+}
+
+// void UCTRLActorUtils::CameraLookAt(AActor* TargetActor, AActor* LookAtActor, float InterpSpeed) {}
 
 template <typename T>
 T* UCTRLActorUtils::GetLocalPlayerPawn(UObject const* WorldContextObject)

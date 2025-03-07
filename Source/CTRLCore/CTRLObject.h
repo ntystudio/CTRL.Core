@@ -22,10 +22,12 @@ namespace CTRL::Object
 	TArray<UClass*> GetSubclassesOf(TSubclassOf<UObject> const& Class);
 }
 
-UCLASS()
+UCLASS(Category="CTRL|Object", DisplayName="Object Utils [CTRL]")
 class UCTRLObject : public UBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
-	UFUNCTION(BlueprintCallable, BlueprintPure, DisplayName="Get Subclasses Of [CTRL]")
+
+public:
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "CTRL|Object", DisplayName="Get Subclasses Of [CTRL]")
 	static TArray<UClass*> GetSubclassesOf(TSubclassOf<UObject> Class);
 };
