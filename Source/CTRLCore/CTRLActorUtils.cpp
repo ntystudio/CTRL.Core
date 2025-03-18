@@ -214,6 +214,13 @@ AController* UCTRLActorUtils::K2_FindController(ECTRLIsValid& OutIsValid, UObjec
 	return nullptr;
 }
 
+ULocalPlayer* UCTRLActorUtils::GetLocalPlayer(UObject const* WorldContextObject)
+{
+	check(WorldContextObject);
+	auto const World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::Assert);
+	return GEngine->GetFirstGamePlayer(World);
+}
+
 APlayerController* UCTRLActorUtils::GetLocalPlayerController(UObject const* WorldContextObject)
 {
 	check(WorldContextObject);

@@ -7,6 +7,7 @@
 
 #include "CTRLActorUtils.generated.h"
 
+class ULocalPlayer;
 class APlayerCameraManager;
 class ACharacter;
 class UActorComponent;
@@ -77,6 +78,13 @@ public:
 	template <typename T = APawn>
 	static T* FindPawn(UObject const* Target, bool bWalkOuter = true);
 
+	/**
+	 * Returns the pawn for the given target object.
+	 * Will search the outer chain for a controller or pawn and return the first pawn found.
+	 * @param Target The target object to find the pawn for.
+	 * @param PawnClass The class of the pawn to find. If null, will return any pawn.
+	 * @return The pawn for the given target object, or nullptr if none exists.
+	 */
 	UFUNCTION(
 		BlueprintCallable,
 		DisplayName = "Find Pawn [CTRL]",
@@ -86,9 +94,11 @@ public:
 	static APawn* K2_FindPawn(ECTRLIsValid& OutIsValid, UObject const* Target, TSubclassOf<APawn> PawnClass = nullptr);
 
 	/**
-	 * Tries to find a controller for the actor.
-	 * If the actor is a pawn, it will return the pawn's controller.
-	 * If the actor is a controller, it will return the controller.
+	 * Returns the controller for the given target object.
+	 * Will search the outer chain for a controller or pawn and return the first controller found.
+	 * @param Target The target object to find the controller for.
+	 * @param ControllerClass The class of the controller to find. If null, will return any controller.
+	 * @return The controller for the given target object, or nullptr if none exists.
 	 */
 	UFUNCTION(
 		BlueprintCallable,
@@ -99,10 +109,26 @@ public:
 	static AController* K2_FindController(ECTRLIsValid& OutIsValid, UObject const* Target, TSubclassOf<AController> ControllerClass = nullptr);
 
 	/**
+	 * Returns the local player for the given world context object.
+	 * On the server, this may not exist, but on the client, it will always be the player.
+	 * @param WorldContextObject 
+	 * @return The local player for the given world context object, or nullptr if none exists.
+	 */
+	UFUNCTION(
+		BlueprintCallable,
+		BlueprintPure,
+		DisplayName = "Get Local Player [CTRL]",
+		Category = "CTRL|Actor",
+		meta = (Keywords="Find Pawn Controller", WorldContext = "WorldContextObject", DefaultToSelf = "WorldContextObject")
+	)
+	static ULocalPlayer* GetLocalPlayer(UObject const* WorldContextObject);
+
+
+	/**
 	 * Returns the local player controller for the given world context object.
-	 * Use this instead of GetFirstLocalPlayerController() because that
-	 * will return the first player controller in the world, which may not be the
-	 * one you want.
+	 * On the server, this may not exist, but on the client, it will always be the player controller.
+	 * @param WorldContextObject 
+	 * @return The local player controller for the given world context object, or nullptr if none exists.
 	 */
 	UFUNCTION(
 		BlueprintCallable,
@@ -119,6 +145,12 @@ public:
 	template <typename T = ACharacter>
 	static T* GetLocalPlayerCharacter(UObject const* WorldContextObject);
 
+	/**
+	 * Returns the local player pawn for the given world context object.
+	 * On the server, this may not exist, but on the client, it will always be the player pawn.
+	 * @param WorldContextObject 
+	 * @return The local player pawn for the given world context object, or nullptr if none exists.
+	 */
 	UFUNCTION(
 		BlueprintCallable,
 		BlueprintPure,
@@ -128,6 +160,12 @@ public:
 	)
 	static APawn* K2_GetLocalPlayerPawn(UObject const* WorldContextObject);
 
+	/**
+	 * Returns the player camera manager for the given actor.
+	 * @param Actor The actor to find the player camera manager for.
+	 * @param CameraManagerClass The class of the camera manager to find. If null, will return any camera manager.
+	 * @return The player camera manager for the given actor, or nullptr if none exists.
+	 */
 	UFUNCTION(
 		BlueprintCallable,
 		BlueprintPure,
