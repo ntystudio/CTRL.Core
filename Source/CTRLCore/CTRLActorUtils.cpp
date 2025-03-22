@@ -89,7 +89,7 @@ AActor* UCTRLActorUtils::K2_GetOwnerActor(UObject* Target, TSubclassOf<AActor> O
 }
 
 template <typename T>
-T* UCTRLActorUtils::GetOwnerActor(UObject* Target)
+T* UCTRLActorUtils::GetOwnerActor(UObject const* Target)
 {
 	if (!IsValid(Target)) { return nullptr; }
 
@@ -98,7 +98,7 @@ T* UCTRLActorUtils::GetOwnerActor(UObject* Target)
 	{
 		if (auto const Owner = Component->GetOwner<T>())
 		{
-			return Owner;
+			return const_cast<T*>(Owner);
 		}
 		return nullptr;
 	}
@@ -106,12 +106,43 @@ T* UCTRLActorUtils::GetOwnerActor(UObject* Target)
 	{
 		if (auto const Owner = Actor->GetOwner<T>())
 		{
-			return Owner;
+			return const_cast<T*>(Owner);
 		}
 		return nullptr;
 	}
 
-	return Target->GetTypedOuter<T>();
+	return const_cast<T*>(Target->GetTypedOuter<T>());
+}
+
+AActor* UCTRLActorUtils::K2_GetActor(UObject* Target, TSubclassOf<AActor> ActorClass, ECTRLIsValid& OutIsValid)
+{
+	OutIsValid = ECTRLIsValid::IsInvalid;
+	if (!IsValid(Target)) { return nullptr; }
+	if (!ActorClass)
+	{
+		ActorClass = AActor::StaticClass();
+	}
+	if (!IsValid(ActorClass)) return nullptr;
+	if (auto const Actor = Cast<AActor>(Target))
+	{
+		if (Actor->IsA(ActorClass))
+		{
+			OutIsValid = ECTRLIsValid::IsValid;
+			return Actor;
+		}
+	}
+	return K2_GetOwnerActor(Target, ActorClass, OutIsValid);
+}
+
+template <typename T>
+T* UCTRLActorUtils::GetActor(UObject const* Target)
+{
+	if (auto const* Actor = Cast<T>(Target))
+	{
+		return const_cast<T*>(Actor);
+	}
+
+	return const_cast<T*>(GetOwnerActor<T>(Target));
 }
 
 template <typename T>
@@ -186,10 +217,6 @@ T* UCTRLActorUtils::FindController(UObject const* Target, bool const bWalkOuter)
 	// Check for outer controller
 	return Target->GetTypedOuter<T>();
 }
-
-// Explicit template instantiation
-template AAIController* UCTRLActorUtils::FindController<AAIController>(UObject const* Target, bool bWalkOuter);
-template APlayerController* UCTRLActorUtils::FindController<APlayerController>(UObject const* Target, bool bWalkOuter);
 
 AController* UCTRLActorUtils::K2_FindController(ECTRLIsValid& OutIsValid, UObject const* Target, TSubclassOf<AController> ControllerClass)
 {

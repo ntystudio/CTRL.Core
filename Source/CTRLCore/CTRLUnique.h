@@ -21,6 +21,12 @@ public:
 	// The ID will be at least MinLength characters long, and will be as short as possible while still being unique.
 	// e.g. FGuid "11310AED2E554D61AF679AA3C5A1082C" → "11310AED"
 	// If the GUID is invalid, an empty string will be returned.
+	UFUNCTION(
+		BlueprintCallable,
+		BlueprintPure,
+		Category = "CTRL|Unique",
+		meta = (DisplayName = "Get Unambiguous Short ID [CTRL]", Keywords = "GUID, Unique, ID")
+	)
 	static FString GetUnambiguousShortId(TSet<FGuid> Guids, FGuid const& Guid, int32 const MinLength = 4)
 	{
 		if (!Guid.IsValid()) return TEXT("");

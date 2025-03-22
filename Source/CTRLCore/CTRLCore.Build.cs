@@ -23,6 +23,7 @@ public class CTRLCore : ModuleRules
 			"AIModule",
 			"CoreUObject",
 			"Engine",
+			"GameplayTags",
 			"Slate",
 			"SlateCore",
 			"UMG",

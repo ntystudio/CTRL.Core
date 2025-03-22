@@ -3,10 +3,13 @@
 
 #pragma once
 
+#include "GameFramework/Actor.h"
+
 #include "Kismet/BlueprintFunctionLibrary.h"
 
 #include "CTRLActorUtils.generated.h"
 
+class AAIController;
 class ULocalPlayer;
 class APlayerCameraManager;
 class ACharacter;
@@ -70,7 +73,19 @@ public:
 	)
 	static AActor* K2_GetOwnerActor(UObject* Target, TSubclassOf<AActor> OwnerClass, ECTRLIsValid& OutIsValid);
 	template <typename T = AActor>
-	static T* GetOwnerActor(UObject* Target);
+	static T* GetOwnerActor(UObject const* Target);
+
+	// Get Actor from Target. If Target is an Actor, return it. If Target is a component, return the owner actor.
+	UFUNCTION(
+		BlueprintCallable,
+		DisplayName = "Get Actor [CTRL]",
+		Category = "CTRL|Actor",
+		meta = (Keywords="Find Owning Outer", WorldContext = "Target", DefaultToSelf = "Target", DeterminesOutputType = "ActorClass", ExpandEnumAsExecs = "OutIsValid")
+	)
+	static AActor* K2_GetActor(UObject* Target, TSubclassOf<AActor> ActorClass, ECTRLIsValid& OutIsValid);
+
+	template <typename T = AActor>
+	static T* GetActor(UObject const* Target);
 
 	template <typename T = AController>
 	static T* FindController(UObject const* Target, bool bWalkOuter = true);
@@ -193,3 +208,11 @@ public:
 	// )
 	// static void CameraLookAt(AActor* TargetActor, AActor* LookAtActor, float InterpSpeed = 5.0f);
 };
+
+// explicit template instantiation
+template CTRLCORE_API AActor* UCTRLActorUtils::GetOwnerActor<AActor>(UObject const* Target);
+template CTRLCORE_API AActor* UCTRLActorUtils::GetActor<AActor>(UObject const* Target);
+template CTRLCORE_API AAIController* UCTRLActorUtils::FindController<AAIController>(UObject const* Target, bool bWalkOuter);
+template CTRLCORE_API APlayerController* UCTRLActorUtils::FindController<APlayerController>(UObject const* Target, bool bWalkOuter);
+template CTRLCORE_API AController* UCTRLActorUtils::FindController<AController>(UObject const* Target, bool bWalkOuter);
+template CTRLCORE_API APawn* UCTRLActorUtils::FindPawn<APawn>(UObject const* Target, bool bWalkOuter);
