@@ -3,6 +3,8 @@
 
 #pragma once
 
+#include "Components/SplineComponent.h"
+
 #include "GameFramework/Actor.h"
 
 #include "Kismet/BlueprintFunctionLibrary.h"
@@ -47,6 +49,25 @@ public:
 	)
 	static UActorComponent* GetValidComponentByClass(
 		AActor* Actor,
+		TSubclassOf<UActorComponent> const ComponentClass,
+		bool& IsComponentValid
+	);
+	
+	UFUNCTION(
+		BlueprintCallable,
+		DisplayName = "Get Valid Component By Name [CTRL]",
+		Category = "CTRL|Actor",
+		meta = (
+			Keywords = "Find Attached Scene Child Children",
+			ComponentClass = "/Script/Engine.ActorComponent",
+			DeterminesOutputType = "ComponentClass",
+			ExpandBoolAsExecs = "IsComponentValid",
+			DefaultToSelf = "Actor"
+		)
+	)
+	static UActorComponent* GetValidComponentByName(
+		AActor* Actor,
+		FName ComponentName,
 		TSubclassOf<UActorComponent> const ComponentClass,
 		bool& IsComponentValid
 	);

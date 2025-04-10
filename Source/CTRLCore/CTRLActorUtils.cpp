@@ -27,6 +27,20 @@ UActorComponent* UCTRLActorUtils::GetValidComponentByClass(AActor* Actor, TSubcl
 	return nullptr;
 }
 
+UActorComponent* UCTRLActorUtils::GetValidComponentByName(AActor* Actor, FName const ComponentName, TSubclassOf<UActorComponent> const ComponentClass, bool& IsComponentValid)
+{
+	IsComponentValid = false;
+	for (auto const Component : Actor->GetComponents())
+	{
+		if (Component->IsA(ComponentClass) && Component->GetFName() == ComponentName)
+		{
+			IsComponentValid = true;
+			return Component;
+		}
+	}
+	return nullptr;
+}
+
 bool UCTRLActorUtils::IsPlayer(AActor const* Actor)
 {
 	if (!IsValid(Actor)) { return false; }
