@@ -95,4 +95,5 @@ public:
 
 	// Convert CTRL Severity to Engine MsgLog Severity.
 	static EMessageSeverity::Type GetSeverity(ECTRLMessageSeverity Severity);
+	static ECTRLMessageSeverity GetSeverity(EMessageSeverity::Type Severity);
 };

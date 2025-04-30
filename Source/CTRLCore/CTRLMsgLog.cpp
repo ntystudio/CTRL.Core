@@ -32,7 +32,6 @@ void UCTRLMsgLog::Log(FString const& Message, ECTRLMessageSeverity const Severit
 	AddMessage(StringMessage(Message, Severity), bOpenMsgLog);
 }
 
-
 //~ ───────────────────────────────────── Output ───────────────────────────────────── //
 
 void UCTRLMsgLog::AddMessage(TSharedRef<FTokenizedMessage> const& Msg, bool const bOpenMsgLog)
@@ -43,7 +42,7 @@ void UCTRLMsgLog::AddMessage(TSharedRef<FTokenizedMessage> const& Msg, bool cons
 	MessageLog.AddMessage(Msg);
 	if (bOpenMsgLog) MessageLog.Open();
 #else
-	OutputLog(Msg, Severity);
+	OutputLog(Msg, GetSeverity(Msg->GetSeverity()));
 #endif
 }
 
@@ -148,4 +147,31 @@ EMessageSeverity::Type UCTRLMsgLog::GetSeverity(ECTRLMessageSeverity const Sever
 			return EMessageSeverity::Error;
 		};
 	};
+}
+
+ECTRLMessageSeverity UCTRLMsgLog::GetSeverity(EMessageSeverity::Type const Severity)
+{
+	PRAGMA_DISABLE_DEPRECATION_WARNINGS
+	switch (Severity)
+	{
+		// ReSharper disable once CppDeprecatedEntity
+		case EMessageSeverity::CriticalError:
+		{
+			return ECTRLMessageSeverity::CriticalError;
+		}
+		case EMessageSeverity::Error:
+			return ECTRLMessageSeverity::Error;
+		case EMessageSeverity::PerformanceWarning:
+			return ECTRLMessageSeverity::PerformanceWarning;
+		case EMessageSeverity::Warning:
+			return ECTRLMessageSeverity::Warning;
+		case EMessageSeverity::Info:
+			return ECTRLMessageSeverity::Info;
+		default:
+		{
+			checkNoEntry();
+			return ECTRLMessageSeverity::Error;
+		};
+	};
+	PRAGMA_ENABLE_DEPRECATION_WARNINGS
 }
