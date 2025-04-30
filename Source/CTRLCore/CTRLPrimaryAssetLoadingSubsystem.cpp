@@ -3,14 +3,14 @@
 
 #include "CTRLCore/CTRLPrimaryAssetLoadingSubsystem.h"
 
-#include "ContentBrowserDataSubsystem.h"
+#if WITH_EDITOR
 #include "Editor.h"
-
-#include "CTRLCore/CTRLWorldSubsystemBlueprintBase.h"
+#endif
 
 #include "Engine/AssetManager.h"
 
 #include "Misc/CoreDelegates.h"
+#include "Misc/ScopeExit.h"
 
 void UCTRLPrimaryAssetLoadingSubsystem::PreBeginPIE(bool bIsSimulating)
 {
