@@ -11,6 +11,7 @@
 
 #include "CTRLActorUtils.generated.h"
 
+class APlayerCameraManager;
 class AAIController;
 class ULocalPlayer;
 class APlayerCameraManager;
@@ -29,18 +30,15 @@ enum class ECTRLIsValid : uint8
 /**
  * 
  */
-UCLASS(Category="CTRL|Actor", DisplayName="Actor Utils [CTRL]")
+UCLASS()
 class CTRLCORE_API UCTRLActorUtils : public UBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
 
-public:
 	UFUNCTION(
 		BlueprintCallable,
 		DisplayName = "Get Valid Component By Class [CTRL]",
-		Category = "CTRL|Actor",
 		meta = (
-			Keywords = "Find Attached Scene Child Children",
 			ComponentClass = "/Script/Engine.ActorComponent",
 			DeterminesOutputType = "ComponentClass",
 			ExpandBoolAsExecs = "IsComponentValid",
@@ -52,7 +50,7 @@ public:
 		TSubclassOf<UActorComponent> const ComponentClass,
 		bool& IsComponentValid
 	);
-	
+
 	UFUNCTION(
 		BlueprintCallable,
 		DisplayName = "Get Valid Component By Name [CTRL]",
@@ -77,21 +75,20 @@ public:
 	 * Useful in event graphs where you want to check whether a player triggered the
 	 * event and you don't want to think about whether the actor is a pawn or a controller.
 	 */
-	UFUNCTION(
-		BlueprintCallable,
-		BlueprintPure,
-		DisplayName = "Is Player Actor [CTRL]",
-		Category = "CTRL|Actor",
-		meta = (Keywords="Controller Collision Hit Outer", WorldContext = "Actor", DefaultToSelf = "Actor")
-	)
+	UFUNCTION(BlueprintCallable, BlueprintPure, DisplayName = "Is Player Actor [CTRL]", meta = (WorldContext = "Actor", DefaultToSelf = "Actor"))
 	static bool IsPlayer(AActor const* Actor);
 
 	UFUNCTION(
 		BlueprintCallable,
 		DisplayName = "Get Owner Actor [CTRL]",
-		Category = "CTRL|Actor",
-		meta = (Keywords="Find Owning Outer", WorldContext = "Target", DefaultToSelf = "Target", DeterminesOutputType = "OwnerClass", ExpandEnumAsExecs = "OutIsValid")
+		meta = (WorldContext = "Target", DefaultToSelf = "Target", DeterminesOutputType = "OwnerClass", ExpandEnumAsExecs = "OutIsValid")
 	)
+	static AActor* K2_GetOwnerActor(UObject* Target, TSubclassOf<AActor> OwnerClass, ECTRLIsValid& OutIsValid);
+
+	template <typename T = AActor>
+	static T* GetOwnerActor(UObject* Target);
+
+	static AActor* GetOwnerActor(UObject* Target, TSubclassOf<AActor> OwnerClass, ECTRLIsValid& OutIsValid);
 	static AActor* K2_GetOwnerActor(UObject* Target, TSubclassOf<AActor> OwnerClass, ECTRLIsValid& OutIsValid);
 	template <typename T = AActor>
 	static T* GetOwnerActor(UObject const* Target);
@@ -124,10 +121,9 @@ public:
 	UFUNCTION(
 		BlueprintCallable,
 		DisplayName = "Find Pawn [CTRL]",
-		Category = "CTRL|Actor",
-		meta = (Keywords="Get Controller Player Outer AI", DefaultToSelf = "Target", DeterminesOutputType = "PawnClass", ExpandEnumAsExecs = "OutIsValid")
+		meta = (DefaultToSelf = "Target", DeterminesOutputType = "PawnClass", ExpandEnumAsExecs = "OutIsValid")
 	)
-	static APawn* K2_FindPawn(ECTRLIsValid& OutIsValid, UObject const* Target, TSubclassOf<APawn> PawnClass = nullptr);
+	static APawn* FindPawn_K2(ECTRLIsValid& OutIsValid, UObject const* Target, TSubclassOf<APawn> PawnClass = nullptr);
 
 	/**
 	 * Returns the controller for the given target object.
@@ -139,10 +135,9 @@ public:
 	UFUNCTION(
 		BlueprintCallable,
 		DisplayName = "Find Controller [CTRL]",
-		Category = "CTRL|Actor",
-		meta = (Keywords="Get Pawn Player AI Outer", DefaultToSelf = "Target", DeterminesOutputType = "ControllerClass", ExpandEnumAsExecs = "OutIsValid", HideSelfPin=false)
+		meta = (DefaultToSelf = "Target", DeterminesOutputType = "ControllerClass", ExpandEnumAsExecs = "OutIsValid", HideSelfPin=false)
 	)
-	static AController* K2_FindController(ECTRLIsValid& OutIsValid, UObject const* Target, TSubclassOf<AController> ControllerClass = nullptr);
+	static AController* FindController_K2(ECTRLIsValid& OutIsValid, UObject const* Target, TSubclassOf<AController> ControllerClass = nullptr);
 
 	/**
 	 * Returns the local player for the given world context object.
@@ -170,8 +165,8 @@ public:
 		BlueprintCallable,
 		BlueprintPure,
 		DisplayName = "Get Local Player Controller [CTRL]",
-		Category = "CTRL|Actor",
-		meta = (Keywords="Find Pawn", WorldContext = "WorldContextObject", DefaultToSelf = "WorldContextObject")
+		meta = (WorldContext = "WorldContextObject", DefaultToSelf = "WorldContextObject"),
+		Category = "Local Player"
 	)
 	static APlayerController* GetLocalPlayerController(UObject const* WorldContextObject);
 
@@ -191,9 +186,38 @@ public:
 		BlueprintCallable,
 		BlueprintPure,
 		DisplayName = "Get Local Player Pawn [CTRL]",
-		Category = "CTRL|Actor",
-		meta = (Keywords="Find Controller", WorldContext = "WorldContextObject", DefaultToSelf = "WorldContextObject")
+		Category = "Local Player",
+		meta = (WorldContext = "WorldContextObject", DefaultToSelf = "WorldContextObject")
 	)
+	static APawn* K2_GetLocalPlayerPawn(UObject const* WorldContextObject);
+
+	UFUNCTION(
+		BlueprintCallable,
+		BlueprintPure,
+		DisplayName = "Get Player Camera Manager [CTRL]",
+		Category = "CTRL|Actor",
+		meta = (
+			Keywords="Find",
+			WorldContext = "Actor",
+			DefaultToSelf = "Actor",
+			CameraManagerClass = "/Script/Engine.PlayerCameraManager",
+			DeterminesOutputType = "CameraManagerClass",
+			ExpandBoolAsExecs = "IsValid"
+		)
+	)
+	static APlayerCameraManager* K2_GetPlayerCameraManager(AActor* Actor, TSubclassOf<APlayerCameraManager> CameraManagerClass, bool& IsValid);
+
+	template <typename T = APlayerCameraManager>
+	static APlayerCameraManager* GetPlayerCameraManager(AActor* Actor);
+
+	// UFUNCTION(
+	// 	BlueprintCallable,
+	// 	DisplayName = "Camera LookAt [CTRL]",
+	// 	Category = "CTRL|Actor",
+	// 	meta = (Keywords="Controller Player Pawn", WorldContext = "WorldContextObject", DefaultToSelf = "WorldContextObject")
+	// )
+	// static void CameraLookAt(AActor* TargetActor, AActor* LookAtActor, float InterpSpeed = 5.0f);
+	static APawn* GetLocalPlayerPawn_K2(UObject const* WorldContextObject);
 	static APawn* K2_GetLocalPlayerPawn(UObject const* WorldContextObject);
 
 	/**

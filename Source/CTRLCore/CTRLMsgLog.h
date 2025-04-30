@@ -15,7 +15,7 @@
 
 class FTextToken;
 
-UENUM(DisplayName="Message Severity [CTRL]", Category="CTRL|MsgLog")
+UENUM()
 enum class ECTRLMessageSeverity : uint8
 {
 	CriticalError = 0,
@@ -47,7 +47,7 @@ public:
 /**
  * 
  */
-UCLASS(Category="CTRL|Message Log", DisplayName="Message Log [CTRL]")
+UCLASS()
 class CTRLCORE_API UCTRLMsgLog : public UBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
@@ -55,14 +55,14 @@ class CTRLCORE_API UCTRLMsgLog : public UBlueprintFunctionLibrary
 public:
 	// Log message to the MessageLog + object token, based on a condition.
 	// Returns true if the condition is met.
-	UFUNCTION(BlueprintCallable, Category="CTRL|Message Log", meta = (Keywords="Debug Check Log Msg Print String Text", WorldContext = "Subject", DefaultToSelf = "Subject"))
+	UFUNCTION(BlueprintCallable, meta = (WorldContext = "Subject", DefaultToSelf = "Subject"))
 	static bool EnsureLog(bool bCondition, UObject const* Subject, FString const& Message = "", ECTRLMessageSeverity Severity = ECTRLMessageSeverity::Warning, bool bOpenMsgLog = true);
 
 	// Log a message in the MessageLog at specified severity.
 	static void Log(FString const& Message, ECTRLMessageSeverity Severity = ECTRLMessageSeverity::Warning, bool bOpenMsgLog = true);
 
 	// Log a message in the MessageLog with a reference to the passed-in object at specified severity.
-	UFUNCTION(BlueprintCallable, Category="CTRL|Message Log", meta = (Keywords="Debug Log Msg Print String Text", WorldContext = "Subject", DefaultToSelf = "Subject"))
+	UFUNCTION(BlueprintCallable, meta = (WorldContext = "Subject", DefaultToSelf = "Subject"))
 	static void Log(UObject const* Subject, FString const& Message, ECTRLMessageSeverity Severity = ECTRLMessageSeverity::Warning, bool bOpenMsgLog = true);
 
 	// add message to log or console log
@@ -90,7 +90,7 @@ public:
 	static TSharedRef<FTokenizedMessage> StringMessage(FString const& Message, ECTRLMessageSeverity const Severity = ECTRLMessageSeverity::Warning);
 
 	// Get short path to object for logging.
-	UFUNCTION(BlueprintCallable, Category="CTRL|Message Log", BlueprintPure, meta=(Keywords="Find String Object Package", WorldContext = "Object", DefaultToSelf = "Object"))
+	UFUNCTION(BlueprintCallable, BlueprintPure)
 	static FString GetShortPath(UObject const* Object);
 
 	// Convert CTRL Severity to Engine MsgLog Severity.

@@ -26,7 +26,6 @@ public class CTRLCore : ModuleRules
 			"GameplayTags",
 			"Slate",
 			"SlateCore",
-			"UMG",
 		});
 
 		if (Target.bBuildEditor)

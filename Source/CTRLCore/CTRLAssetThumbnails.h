@@ -17,7 +17,7 @@ class UStaticMesh;
  * Recommended: Add a UAssetDefinitionDefault for each implementing class,
  * and give them a custom color so types are more easily differentiatable.
  */
-UINTERFACE(BlueprintType, Category="CTRL|AssetThumbnails")
+UINTERFACE(BlueprintType)
 class CTRLCORE_API UCTRLStaticMeshThumbnailProvider : public UInterface
 {
 	GENERATED_BODY()
@@ -39,7 +39,7 @@ public:
  * Recommended: Add a UAssetDefinitionDefault for each implementing class,
  * and give them a custom color so types are more easily differentiatable.
  */
-UINTERFACE(BlueprintType, Category="CTRL|AssetThumbnails")
+UINTERFACE(BlueprintType)
 class CTRLCORE_API UCTRLTextureThumbnailProvider : public UInterface
 {
 	GENERATED_BODY()

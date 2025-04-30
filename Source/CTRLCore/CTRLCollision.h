@@ -9,16 +9,18 @@
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
 
+#include "UObject/Object.h"
+
 #include "CTRLCollision.generated.h"
 
-UENUM(BlueprintType, Category="CTRL|Collision")
+UENUM(BlueprintType)
 enum class ECTRLDrawDebugType: uint8
 {
 	Line,
 	Arrow,
 };
 
-UENUM(BlueprintType, Category="CTRL|Collision")
+UENUM(BlueprintType)
 enum class ECTRLDrawDebugDuration: uint8
 {
 	SingleFrame,
@@ -26,7 +28,7 @@ enum class ECTRLDrawDebugDuration: uint8
 	Duration
 };
 
-USTRUCT(BlueprintType, Category="CTRL|Collision")
+USTRUCT(BlueprintType)
 struct CTRLCORE_API FCTRLDrawDebugOptions
 {
 	GENERATED_BODY()
@@ -194,7 +196,7 @@ struct CTRLCORE_API FCTRLDrawDebugOptions
 	friend bool operator!=(FCTRLDrawDebugOptions const& Lhs, FCTRLDrawDebugOptions const& RHS) { return !(Lhs == RHS); }
 };
 
-USTRUCT(BlueprintType, Category="CTRL|Collision")
+USTRUCT(BlueprintType)
 struct CTRLCORE_API FCTRLIgnoreOptions
 {
 	GENERATED_BODY()
@@ -206,7 +208,7 @@ struct CTRLCORE_API FCTRLIgnoreOptions
 	TSet<TObjectPtr<UPrimitiveComponent>> IgnoredComponents;
 };
 
-USTRUCT(BlueprintType, Category="CTRL|Collision")
+USTRUCT(BlueprintType)
 struct CTRLCORE_API FCTRLCollisionQueryParams
 {
 	GENERATED_BODY()
