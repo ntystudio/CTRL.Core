@@ -57,6 +57,11 @@ bool UCTRLActorUtils::IsPlayer(AActor const* Actor)
 	return false;
 }
 
+AActor* UCTRLActorUtils::K2_GetOwnerActor(UObject* Target, TSubclassOf<AActor> OwnerClass, ECTRLIsValid& OutIsValid)
+{
+	return GetOwnerActor(Target, OwnerClass, OutIsValid);
+}
+
 AActor* UCTRLActorUtils::GetOwnerActor(UObject* Target, TSubclassOf<AActor> OwnerClass, ECTRLIsValid& OutIsValid)
 {
 	OutIsValid = ECTRLIsValid::IsInvalid;
@@ -295,9 +300,22 @@ APlayerController* UCTRLActorUtils::GetLocalPlayerController(UObject const* Worl
 	return GEngine->GetFirstLocalPlayerController(World);
 }
 
-APawn* UCTRLActorUtils::GetLocalPlayerPawn_K2(UObject const* WorldContextObject)
+APawn* UCTRLActorUtils::K2_GetLocalPlayerPawn(UObject const* WorldContextObject)
 {
 	return GetLocalPlayerPawn<APawn>(WorldContextObject);
+}
+
+APlayerCameraManager* UCTRLActorUtils::K2_GetPlayerCameraManager(AActor* Actor, TSubclassOf<APlayerCameraManager> CameraManagerClass, bool& IsValid)
+{
+	if (auto const PlayerCameraManager = GetPlayerCameraManager<APlayerCameraManager>(Actor))
+	{
+		if (CameraManagerClass != nullptr && PlayerCameraManager->IsA(CameraManagerClass))
+		{
+			IsValid = true;
+			return PlayerCameraManager;
+		}
+	}
+	return nullptr;
 }
 
 template <typename T>
@@ -316,6 +334,16 @@ T* UCTRLActorUtils::GetLocalPlayerCharacter(UObject const* WorldContextObject)
 	if (auto const PC = GetLocalPlayerController(WorldContextObject))
 	{
 		return Cast<T>(PC->GetCharacter());
+	}
+	return nullptr;
+}
+
+template <typename T>
+APlayerCameraManager* UCTRLActorUtils::GetPlayerCameraManager(AActor* Actor)
+{
+	if (auto const PC = UCTRLActorUtils::FindController<APlayerController>(Actor))
+	{
+		return Cast<T>(PC->PlayerCameraManager);
 	}
 	return nullptr;
 }

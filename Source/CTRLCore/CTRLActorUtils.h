@@ -34,7 +34,7 @@ UCLASS()
 class CTRLCORE_API UCTRLActorUtils : public UBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
-
+public:
 	UFUNCTION(
 		BlueprintCallable,
 		DisplayName = "Get Valid Component By Class [CTRL]",
@@ -89,7 +89,6 @@ class CTRLCORE_API UCTRLActorUtils : public UBlueprintFunctionLibrary
 	static T* GetOwnerActor(UObject* Target);
 
 	static AActor* GetOwnerActor(UObject* Target, TSubclassOf<AActor> OwnerClass, ECTRLIsValid& OutIsValid);
-	static AActor* K2_GetOwnerActor(UObject* Target, TSubclassOf<AActor> OwnerClass, ECTRLIsValid& OutIsValid);
 	template <typename T = AActor>
 	static T* GetOwnerActor(UObject const* Target);
 
@@ -191,22 +190,6 @@ class CTRLCORE_API UCTRLActorUtils : public UBlueprintFunctionLibrary
 	)
 	static APawn* K2_GetLocalPlayerPawn(UObject const* WorldContextObject);
 
-	UFUNCTION(
-		BlueprintCallable,
-		BlueprintPure,
-		DisplayName = "Get Player Camera Manager [CTRL]",
-		Category = "CTRL|Actor",
-		meta = (
-			Keywords="Find",
-			WorldContext = "Actor",
-			DefaultToSelf = "Actor",
-			CameraManagerClass = "/Script/Engine.PlayerCameraManager",
-			DeterminesOutputType = "CameraManagerClass",
-			ExpandBoolAsExecs = "IsValid"
-		)
-	)
-	static APlayerCameraManager* K2_GetPlayerCameraManager(AActor* Actor, TSubclassOf<APlayerCameraManager> CameraManagerClass, bool& IsValid);
-
 	template <typename T = APlayerCameraManager>
 	static APlayerCameraManager* GetPlayerCameraManager(AActor* Actor);
 
@@ -217,8 +200,6 @@ class CTRLCORE_API UCTRLActorUtils : public UBlueprintFunctionLibrary
 	// 	meta = (Keywords="Controller Player Pawn", WorldContext = "WorldContextObject", DefaultToSelf = "WorldContextObject")
 	// )
 	// static void CameraLookAt(AActor* TargetActor, AActor* LookAtActor, float InterpSpeed = 5.0f);
-	static APawn* GetLocalPlayerPawn_K2(UObject const* WorldContextObject);
-	static APawn* K2_GetLocalPlayerPawn(UObject const* WorldContextObject);
 
 	/**
 	 * Returns the player camera manager for the given actor.
@@ -241,9 +222,6 @@ class CTRLCORE_API UCTRLActorUtils : public UBlueprintFunctionLibrary
 		)
 	)
 	static APlayerCameraManager* K2_GetPlayerCameraManager(AActor* Actor, TSubclassOf<APlayerCameraManager> CameraManagerClass, bool& IsValid);
-
-	template <typename T = APlayerCameraManager>
-	static APlayerCameraManager* GetPlayerCameraManager(AActor* Actor);
 
 	// UFUNCTION(
 	// 	BlueprintCallable,
