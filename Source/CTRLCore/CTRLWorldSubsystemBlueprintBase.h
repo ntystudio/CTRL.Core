@@ -4,7 +4,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Editor.h"
 
 #include "CTRLCore/CTRLPrimaryAssetLoadingSubsystem.h"
 
@@ -12,7 +11,6 @@
 #include "Engine/BlueprintGeneratedClass.h"
 #include "Engine/World.h"
 
-#include "Subsystems/EngineSubsystem.h"
 #include "Subsystems/WorldSubsystem.h"
 
 #include "CTRLWorldSubsystemBlueprintBase.generated.h"
